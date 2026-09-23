@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <title>PPSX → PPTX 批量转换</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="app-shell">
+    <section class="hero">
+      <div class="brand-mark" aria-hidden="true">P</div>
+      <div>
+        <p class="eyebrow">LOCAL · PRIVATE · BATCH</p>
+        <h1>PPSX → PPTX 批量转换</h1>
+        <p class="subtitle">选择一个文件夹，把其中所有 <code>.ppsx</code> 转换成同名 <code>.pptx</code>。文件只在你的浏览器本地处理，不会上传。</p>
+      </div>
+    </section>
+
+    <section class="panel control-panel">
+      <div class="folder-row">
+        <div class="folder-info">
+          <span class="label">当前文件夹</span>
+          <strong id="folderName">尚未选择</strong>
+          <span id="folderHint" class="muted">请先选择包含 PPSX 文件的文件夹</span>
+        </div>
+        <button id="selectFolderBtn" class="btn btn-secondary" type="button">选择文件夹</button>
+      </div>
+
+      <div class="stats" aria-live="polite">
+        <div class="stat-card">
+          <span class="stat-label">检测到</span>
+          <strong id="fileCount">0</strong>
+          <span class="stat-unit">个 PPSX</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">同名 PPTX</span>
+          <strong id="existingCount">0</strong>
+          <span class="stat-unit">个将覆盖</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">状态</span>
+          <strong id="statusText" class="status-idle">待选择</strong>
+          <span class="stat-unit">本地处理</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="convertBtn" class="btn btn-primary" type="button" disabled>开始转换</button>
+        <button id="rescanBtn" class="btn btn-ghost" type="button" disabled>重新扫描</button>
+      </div>
+
+      <div class="progress-wrap" id="progressWrap" hidden>
+        <div class="progress-header">
+          <span id="currentFile">准备中…</span>
+          <span id="progressText">0%</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel files-panel">
+      <div class="section-head">
+        <div>
+          <h2>待处理文件</h2>
+          <p>仅处理所选文件夹最外层的 <code>.ppsx</code>，不会递归进入子文件夹。</p>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon" aria-hidden="true">↗</div>
+        <p>选择文件夹后，这里会列出所有待转换文件。</p>
+      </div>
+
+      <div id="fileList" class="file-list" hidden></div>
+    </section>
+
+    <section class="notes">
+      <p><strong>转换规则：</strong>保留原 PPSX；输出同名 PPTX；如果同名 PPTX 已存在，会在你确认后覆盖。</p>
+      <p id="compatibilityNote">推荐使用最新版 Microsoft Edge 或 Google Chrome，并通过本项目的本地服务器打开。</p>
+    </section>
+  </main>
+
+  <dialog id="confirmDialog" class="dialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-icon warning" aria-hidden="true">!</div>
+      <h3>确认开始转换</h3>
+      <p id="confirmMessage"></p>
+      <div class="dialog-actions">
+        <button value="cancel" class="btn btn-ghost">取消</button>
+        <button value="confirm" class="btn btn-primary">开始转换</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="resultDialog" class="dialog">
+    <form method="dialog" class="dialog-card">
+      <div id="resultIcon" class="dialog-icon success" aria-hidden="true">✓</div>
+      <h3 id="resultTitle">转换完成</h3>
+      <p id="resultMessage"></p>
+      <div id="errorDetails" class="error-details" hidden></div>
+      <div class="dialog-actions single">
+        <button value="ok" class="btn btn-primary">确定</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="./vendor/jszip.min.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
